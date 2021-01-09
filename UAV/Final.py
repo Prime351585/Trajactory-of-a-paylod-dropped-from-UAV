@@ -66,19 +66,22 @@ Gravity=9.81                     # Gravity
 t=0
 Fdragx=0
 Xi=0
-Yi=20                            # Hieght of Drone can be calculated 
+Yi=22                            # Hieght of Drone can be calculated 
+Vw=2                             # Wind velocity can be altered from here
 # Resultant velocity ////////////////////////////////////////////////////////////////////
-U=sqrt((Ux)**(2)+(Uy)**2+2*(1/sqrt(2))*Ux*Uy)
+theta=math.atan(Uy/Ux)#//////// velocity vector angle
+U=sqrt((Ux)**(2)+(Uy)**2+2*math.cos(theta)*Ux*Uy)+Vw
 Verticalvel=0
-for t in np.arange(0,60,0.001):  # For 1 Minute
+DelT=0.01                        # Small interval of time
+for t in np.arange(0,60,DelT):   # For 1 Minute
     # drag force in horizontal direction
     Fdragx=(-1/2)*(P*(U**2)*C*A)
     # initial acceleration in horizontal direction
     Aix=Fdragx/M
     # velocity in horizontal direction
-    Vx=U+Aix*0.01
+    Vx=U+Aix*DelT
     # distance in horizontal direction
-    Xf=Xi+U*0.01+(1/2)*Aix*((0.01)**2)
+    Xf=Xi+U*DelT+(1/2)*Aix*((DelT)**2)
     U=Vx
     Xi=Xf
     # drag force in vertical direction
@@ -86,9 +89,9 @@ for t in np.arange(0,60,0.001):  # For 1 Minute
     # initial acceleration in vertical direction
     Aiy=(Fdragy/M)-Gravity
     # velocity in horizontal direction
-    Vy=Verticalvel+Aiy*0.01
+    Vy=Verticalvel+Aiy*DelT
     # distance in horizontal direction
-    Yf=Yi+Verticalvel*0.01+(1/2)*Aiy*((0.01)**2)
+    Yf=Yi+Verticalvel*DelT+(1/2)*Aiy*((DelT)**2)
     Verticalvel=Vy
     Yi=Yf
     # FOR GRAPH
