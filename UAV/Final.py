@@ -96,10 +96,10 @@ DelT=0.01                        # Small interval of time
 
 def Trajectorycal(U,DelT,Xi,Yi,Verticalvel):
     
-    for t in np.arange(0,60,DelT):   # Upto 1 Minute of dropping time,for More then 1 minute of dropping change 60 to desired time in seconds. 
+    for t in np.arange(0,120,DelT):   # Upto 1 Minute of dropping time,for More then 1 minute of dropping change 60 to desired time in seconds. 
         
         # drag force in horizontal direction
-        Fdragx=(-1/2)*(P*(U**2)*C*A)
+        Fdragx=(-1/2)*(P*((U-Vw)**2)*C*A)
         
         # initial acceleration in horizontal direction
         Aix=Fdragx/M
@@ -158,16 +158,21 @@ Ypred=0
 while True:
     Trajectorycal(U,DelT,Xi,y,Verticalvel)
     if Acc[i]>0.5:
-        y+=1
+        y+=0.5
         Trajectorycal(U,DelT,Xi,y,Verticalvel)
-    if Acc[i]<=0.5:
-        y-=1
+    elif Acc[i]<=0.5:
+        y-=0.5
         Trajectorycal(U,DelT,Xi,y,Verticalvel)
-    if max(Acc)>0.99:
+    if max(Acc)<0.999 and max(Acc)>0.980:      # This range can be altered for an Accuracy less then 80%(If you Want to play with the code by increasing the Velocity of UAV)
         Ypred=y
+        print('Warning With Current Height only an Accuracy of',Acc[0]*100,'% can be obtained')
+        print('For an accuracy of',max(Acc)*100,'% it is Reccomended to Lock on UAV to an Altitude of',Ypred,'m',',Drop Time Will be =',T[-1] ,'sec')
+        break
+    if i>10000:
+        print("Error Either Wind velocity is greater then UAV's Velocity Or Veocity of the UAV is too much ")
         break
     i+=1
-
+    
 # FOR GRAPHING PREDICTED PATH ///////////////////////////////////////////////////
 
 XPredFinal.clear()
@@ -180,8 +185,6 @@ Graphing(XPredFinal,YPredFinal,"PREDICTED PATH")
 
 # For printing the predicted path ///////////////////////////////////////////////
 
-print('Warning With Current Height only an Accuracy of',Acc[0]*100,'% can be obtained')
-print('For an accuracy of',max(Acc)*100,'% it is Reccomended to Lock on UAV to an Altitude of',Ypred,'m',',Drop Time Will be =',T[-1] ,'sec')
 
 plt.show() # It is used in the end as to plot the both  the graph on one
 
