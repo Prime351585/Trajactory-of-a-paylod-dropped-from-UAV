@@ -169,7 +169,7 @@ while True:
         print('For an accuracy of',max(Acc)*100,'% it is Reccomended to Lock on UAV to an Altitude of',Ypred,'m',',Drop Time Will be =',T[-1] ,'sec')
         break
     if i>10000:
-        print("Error Either Wind velocity is greater then UAV's Velocity Or Veocity of the UAV is too much ")
+        print("Error Either Wind velocity is greater then UAV's Velocity Or Veocity of the UAV is too High ")
         break
     i+=1
     
